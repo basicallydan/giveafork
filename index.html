@@ -1,0 +1,27 @@
+<html>
+<head>
+	<title>Give a Fork</title>
+	<script type="text/javascript" src="reqwest.min.js"></script>
+	<script type="text/javascript" src="tinyDOM.min.js"></script>
+</head>
+<body>
+	<h3>Repositories looking for contributors</h3>
+	<ul id="repos-looking"></ul>
+	<script type="text/javascript">
+		var list = '';
+		reqwest({
+			url: 'https://api.github.com/search/repositories?q=accepting%20pull%20requests|seekingcontributors+in:readme&callback=?',
+			type: 'jsonp',
+			success: function (response) {
+				var project;
+				console.log(response);
+				for (var i = response.data.items.length - 1; i >= 0; i--) {
+					project = response.data.items[i];
+					list = list + '<li><a href="' + project.html_url + '" title="' + project.description + '">' + project.name + '</a> by <a href="' + project.owner.url + '">' + project.owner.login + '</a></li>\n';
+				}
+				document.getElementById('repos-looking').innerHTML = list;
+			}
+		})
+	</script>
+</body>
+</html>
